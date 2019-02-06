@@ -53,3 +53,10 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+# Custom
+gem 'connection_pool'
+gem 'dalli'
+gem 'excon'
+gem 'oj'
+gem 'pry-rails'

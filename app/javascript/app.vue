@@ -1,25 +1,13 @@
 <template>
-  <div id="app">
-    <p>{{ message }}</p>
+  <div>
+    <RandomChart />
   </div>
 </template>
 
 <script>
 export default {
-  data: function () {
-    return {
-      message: "Hello Vue!"
-    }
-  },
-  mounted() {
-    console.log('foo')
+  components: {
+    RandomChart: () => import('./components/RandomChart.vue')
   }
 }
 </script>
-
-<style scoped>
-p {
-  font-size: 2em;
-  text-align: center;
-}
-</style>

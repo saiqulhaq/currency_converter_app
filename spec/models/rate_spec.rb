@@ -25,4 +25,10 @@ RSpec.describe Rate, type: :model do
     instance_y.hour = 2
     expect(instance_y.save).to be_truthy
   end
+
+  it 'should has many quotes' do
+    instance = described_class.new
+    expect(instance).to respond_to(:quotes)
+    expect(instance.quotes).to be_a(ActiveRecord::Associations::CollectionProxy)
+  end
 end

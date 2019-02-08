@@ -11,4 +11,5 @@
 #
 
 class Rate < ApplicationRecord
+  has_many :quotes, dependent: :delete_all
 end

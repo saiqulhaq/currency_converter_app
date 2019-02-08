@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_08_150446) do
+ActiveRecord::Schema.define(version: 2019_02_08_153110) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "quotes", force: :cascade do |t|
+    t.bigint "rate_id"
+    t.integer "price_cents", default: 0, null: false
+    t.string "price_currency", default: "USD", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rate_id"], name: "index_quotes_on_rate_id"
+  end
 
   create_table "rates", force: :cascade do |t|
     t.date "date"
@@ -25,4 +34,5 @@ ActiveRecord::Schema.define(version: 2019_02_08_150446) do
     t.index ["historical"], name: "index_rates_on_historical"
   end
 
+  add_foreign_key "quotes", "rates"
 end

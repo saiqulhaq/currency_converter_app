@@ -11,5 +11,7 @@
 #
 
 class Rate < ApplicationRecord
+  include IdentityCache
   has_many :quotes, dependent: :delete_all
+  cache_has_many :quotes
 end

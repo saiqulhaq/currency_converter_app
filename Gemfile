@@ -64,6 +64,7 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'connection_pool'
 gem 'dalli'
 gem 'excon'
+gem 'identity_cache'
 gem 'money-rails', '~>1.12'
 gem 'oj'
 gem 'pry-rails'

@@ -12,9 +12,11 @@
 #
 
 class Quote < ApplicationRecord
+  include IdentityCache
   # supported currencies
   CURRENCIES = %w[USD BRL EUR AUD].freeze
 
   belongs_to :rate
+  cache_belongs_to :rate
   monetize :price_cents
 end

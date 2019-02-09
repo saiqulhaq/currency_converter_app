@@ -20,7 +20,7 @@ RSpec.describe Rate, type: :model do
   it 'should has unique date+hour' do
     create(:rate, date: Date.today, hour: 1)
     instance_y = build(:rate, date: Date.today, hour: 1)
-    expect { instance_y.save }.to raise_error
+    expect { instance_y.save }.to raise_error(ActiveRecord::RecordNotUnique)
 
     instance_y.hour = 2
     expect(instance_y.save).to be_truthy

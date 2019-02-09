@@ -3,7 +3,7 @@
 require 'rails_helper'
 require_dependency 'rate_api'
 
-RSpec.fdescribe RateApi do
+RSpec.describe RateApi do
   let(:instance) { described_class.new }
 
   describe '#live' do

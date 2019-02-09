@@ -6,38 +6,55 @@ require_dependency 'rate_api'
 RSpec.fdescribe RateApi do
   let(:instance) { described_class.new }
 
+  describe '#live' do
+    it 'returns `source` and `quotes` data' do
+      VCR.use_cassette("#{described_class}_live") do
+        live = subject.live
+        expect(live).to have_key('source')
+        expect(live).to have_key('quotes')
+        Quote::CURRENCIES.each do |currency|
+          expect(live['quotes']).to have_key(currency)
+        end
+      end
+    end
+  end
+
   describe '#historical' do
-    it 'returns Rate object if date is current date' do
-      VCR.use_cassette("#{described_class}_historical_current_date") do
-        historical = subject.historical(Date.parse('2019-02-09'))
-        expect(historical).to have_key('source')
-        expect(historical).to have_key('quotes')
-        Quote::CURRENCIES.each do |currency|
-          expect(historical['quotes']).to have_key(currency)
+    let(:current_date) { Date.parse('2019-02-09') }
+
+    context '`date` param' do
+      it 'returns `source` and `quotes` data if date is current date' do
+        VCR.use_cassette("#{described_class}_historical_current_date") do
+          historical = subject.historical(current_date)
+          expect(historical).to have_key('source')
+          expect(historical).to have_key('quotes')
+          Quote::CURRENCIES.each do |currency|
+            expect(historical['quotes']).to have_key(currency)
+          end
         end
       end
-    end
 
-    it 'returns Rate object if date is past date' do
-      VCR.use_cassette("#{described_class}_historical_past_date") do
-        historical = subject.historical(Date.parse('2019-02-08'))
-        expect(historical).to have_key('source')
-        expect(historical).to have_key('quotes')
-        Quote::CURRENCIES.each do |currency|
-          expect(historical['quotes']).to have_key(currency)
+      it 'returns `source` and `quotes` object if date is past date' do
+        VCR.use_cassette("#{described_class}_historical_past_date") do
+          historical = subject.historical(Date.parse('2019-02-08'))
+          expect(historical).to have_key('source')
+          expect(historical).to have_key('quotes')
+          Quote::CURRENCIES.each do |currency|
+            expect(historical['quotes']).to have_key(currency)
+          end
         end
       end
-    end
 
-    context 'date is future date' do
-      subject { described_class.new.historical(Date.tomorrow) }
-      it 'returns false' do
-        expect(subject).to be_falsey
-      end
+      context 'date value is a future date' do
+        subject { described_class.new.historical(Date.tomorrow) }
+        it 'returns false' do
+          expect(subject).to be_falsey
+        end
 
-      it "returns 'date should be past or current' errors message" do
-        instance.historical(Date.tomorrow)
-        expect(instance.error_message).to eq('date should be past or current')
+        it "returns 'date should be past or current' errors message" do
+          instance.historical(Date.tomorrow)
+          expect(instance.error_message).to eq('date should be past or current')
+        end
       end
     end
 

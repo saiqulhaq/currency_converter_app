@@ -9,9 +9,16 @@ class RateApi
     @api_response = {}
   end
 
-  # def live(source = DEFAULT_SOURCE)
-  #   'foo'
-  # end
+  def live(source = DEFAULT_SOURCE)
+    api_path = "live?#{live_params(source).to_param}"
+    self.api_response = exec_api_request(api_path)&.body
+
+    return quotes if success_api_request?
+
+    errors.add(:base, custom_error_message(api_response_error_code))
+
+    false
+  end
 
   def historical(date, source = DEFAULT_SOURCE)
     if date.future?
@@ -19,8 +26,8 @@ class RateApi
       return false
     end
 
-    path = "historical?#{historical_params(date, source).to_param}"
-    self.api_response = exec_api_request(path)&.body
+    api_path = "historical?#{historical_params(date, source).to_param}"
+    self.api_response = exec_api_request(api_path)&.body
 
     return quotes if success_api_request?
 
@@ -66,6 +73,14 @@ class RateApi
     {
       access_key: API_KEY,
       date: date,
+      source: source,
+      currencies: Quote::CURRENCIES.join(',')
+    }
+  end
+
+  def live_params(source)
+    {
+      access_key: API_KEY,
       source: source,
       currencies: Quote::CURRENCIES.join(',')
     }

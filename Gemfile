@@ -70,3 +70,4 @@ gem 'money-rails', '~>1.12'
 gem 'oj'
 gem 'pry-rails'
 gem 'sidekiq'
+gem 'whenever', require: false

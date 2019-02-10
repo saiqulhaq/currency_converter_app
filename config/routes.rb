@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   namespace :api do
     resource :rates, only: [] do
       collection do
-        get :history
+        get :historical
         get :live
       end
     end

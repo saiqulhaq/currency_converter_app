@@ -2,7 +2,7 @@
 
 module Api
   class RatesController < ::ApplicationController
-    def history
+    def historical
       return render json: 'invalid date' if date_param.nil?
 
       cache_key = "#{self.class}:historical:#{date_param}"

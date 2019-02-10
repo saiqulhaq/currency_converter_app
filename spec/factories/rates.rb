@@ -1,21 +1,22 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: rates
 #
-#  id         :bigint(8)        not null, primary key
-#  date       :date
-#  hour       :integer
-#  historical :boolean          default(FALSE)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id              :bigint(8)        not null, primary key
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  historical_date :date
+#  live_timestamp  :datetime
 #
 
 FactoryBot.define do
   factory :rate do
-    date { rand(100).days.ago }
-    hour { rand(23) }
-    historical { [true, false].sample }
+    factory :historical_rate do
+      historical_date { rand(100).days.ago }
+    end
+    factory :live_rate do
+      live_timestamp { rand(60).minutes.ago }
+    end
   end
 end

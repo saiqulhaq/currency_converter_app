@@ -16,7 +16,7 @@ class Quote < ApplicationRecord
   # supported currencies
   CURRENCIES = %w[USD BRL EUR AUD].freeze
 
-  belongs_to :rate
+  belongs_to :rate, inverse_of: :quotes
   cache_belongs_to :rate
   monetize :price_cents
 end

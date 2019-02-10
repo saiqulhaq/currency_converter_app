@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: quotes
@@ -12,7 +14,7 @@
 
 FactoryBot.define do
   factory :quote do
-    rate
+    rate { create %i[historical_rate live_rate].sample }
     price_cents { rand(1000) }
     price_currency { Quote::CURRENCIES.sample }
   end

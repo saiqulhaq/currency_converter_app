@@ -61,6 +61,7 @@ end
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 # Custom
+gem 'blueprinter'
 gem 'cityhash'
 gem 'connection_pool'
 gem 'dalli'

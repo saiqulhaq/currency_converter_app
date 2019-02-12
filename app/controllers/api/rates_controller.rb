@@ -13,12 +13,11 @@ module Api
     end
 
     def live
-      now = Time.zone.now
-      cache_key = "#{self.class}:live:#{now.to_date}:#{now.hour}"
-      json = Rails.cache.fetch(cache_key) do
-        api.live
-      end
-      render json: json
+      return unless stale?
+
+      rates = Rate.where('DATE(live_timestamp) = ?', Date.today)
+                  .order(:live_timestamp)
+      render json: RateSerializer.render(rates, view: :live)
     end
 
     private
@@ -29,6 +28,7 @@ module Api
 
     def date_param
       return @date_param if defined?(@date_param)
+
       @date_param = begin
                       Date.parse params.require(:date)
                     rescue ArgumentError

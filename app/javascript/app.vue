@@ -1,13 +1,13 @@
 <template>
   <div>
-    <RandomChart />
+    <Chart />
   </div>
 </template>
 
 <script>
 export default {
   components: {
-    RandomChart: () => import('./components/RandomChart.vue')
+    Chart: () => import('./components/Chart.vue')
   }
 }
 </script>

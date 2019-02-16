@@ -1,13 +1,13 @@
 <template>
   <div>
-    <Chart />
+    <LiveChart />
   </div>
 </template>
 
 <script>
 export default {
   components: {
-    Chart: () => import('./components/Chart.vue')
+    LiveChart: () => import('./components/LiveChart.vue')
   }
 }
 </script>

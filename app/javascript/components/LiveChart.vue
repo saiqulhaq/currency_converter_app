@@ -78,8 +78,6 @@ export default {
       });
       this.$set(this.$data, "labels", labels);
 
-      console.log(this.$data.quotes);
-
       const datasets = [];
 
       forEach(keys(this.$data.quotes), rateCode => {

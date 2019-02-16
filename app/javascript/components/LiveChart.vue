@@ -126,7 +126,6 @@ export default {
 
 <style>
 .small {
-  max-width: 960px;
-  margin: 150px auto;
+  max-width: 600px;
 }
 </style>

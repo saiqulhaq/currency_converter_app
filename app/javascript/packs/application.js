@@ -1,4 +1,6 @@
 /* eslint no-console: 0 */
+import 'tachyons'
+
 import Vue from 'vue'
 import App from '../app.vue'
 import VueResource from 'vue-resource'

@@ -6,6 +6,7 @@
     "chart.js": "^2.7.3",
     "lodash-es": "^4.17.11",
     "moment": "^2.24.0",
+    "tachyons": "^4.11.1",
     "vue": "^2.6.2",
     "vue-chartjs": "^3.4.0",
     "vue-loader": "14.2.2",

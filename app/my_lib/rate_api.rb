@@ -20,20 +20,25 @@ class RateApi
     false
   end
 
-  def historical(date, source = DEFAULT_SOURCE)
-    if date.future?
-      errors.add(:base, 'date should be past or current')
-      return false
+  # @param dates [Array] array of date
+  # @return array of Rate and its quotes
+  def historical(dates, source = DEFAULT_SOURCE)
+    dates.tap do |d|
+      d.each do |date|
+        if date.future?
+          errors.add(:base, 'date should be past or current')
+          return false
+        end
+      end
     end
 
-    api_path = "historical?#{historical_params(date, source).to_param}"
-    self.api_response = exec_api_request(api_path)&.body
+    return [] if dates.blank?
 
-    return quotes if success_api_request?
-
-    errors.add(:base, custom_error_message(api_response_error_code))
-
-    false
+    if dates.one?
+      [fetch_single_historical(dates.first, source)]
+    else
+      fetch_multiple_historical(dates, source)
+    end
   end
 
   def error_message
@@ -101,5 +106,35 @@ class RateApi
 
   def api_response_error_code
     api_response['error'] && api_response['error']['code']
+  end
+
+  def fetch_single_historical(date, source)
+    api_path = "historical?#{historical_params(date, source).to_param}"
+    self.api_response = exec_api_request(api_path)&.body
+
+    if success_api_request?
+      quotes.merge('date' => date)
+    else
+      errors.add(:base, custom_error_message(api_response_error_code))
+      false
+    end
+  end
+
+  def fetch_multiple_historical(dates, source)
+    api_paths = dates.map do |date|
+      {
+        path: "historical?#{historical_params(date, source).to_param}",
+        method: :get
+      }
+    end
+    connection.requests(api_paths).map do |response|
+      self.api_response = response.body
+      if success_api_request?
+        quotes.merge('date' => api_response['date'])
+      else
+        errors.add(:base, custom_error_message(api_response_error_code))
+        false
+      end
+    end
   end
 end

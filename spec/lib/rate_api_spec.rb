@@ -20,23 +20,29 @@ RSpec.describe RateApi do
   end
 
   describe '#historical' do
-    let(:current_date) { Date.parse('2019-02-09') }
+    let(:dates_param) do
+      [Date.parse('2019-02-09'),
+       Date.parse('2019-02-08'),
+       Date.parse('2019-02-07')]
+    end
 
-    context '`date` param' do
-      it 'returns `source` and `quotes` data if date is current date' do
-        VCR.use_cassette("#{described_class}_historical_current_date") do
-          historical = subject.historical(current_date)
-          expect(historical).to have_key('source')
-          expect(historical).to have_key('quotes')
-          Quote::CURRENCIES.each do |currency|
-            expect(historical['quotes']).to have_key(currency)
-          end
+    context '`dates` param' do
+      it 'returns array, same as given dates param given' do
+        VCR.use_cassette("#{described_class}_historical_multiple") do
+          historical = subject.historical(dates_param)
+          expect(historical.size).to eq(dates_param.length)
+        end
+
+        VCR.use_cassette("#{described_class}_historical_single") do
+          historical = subject.historical([dates_param.first])
+          expect(historical.size).to eq(1)
         end
       end
 
-      it 'returns `source` and `quotes` object if date is past date' do
-        VCR.use_cassette("#{described_class}_historical_past_date") do
-          historical = subject.historical(Date.parse('2019-02-08'))
+      it 'returns `date`, `source` and `quotes` data if date is current date' do
+        VCR.use_cassette("#{described_class}_historical_multiple") do
+          historical = subject.historical(dates_param)[0]
+          expect(historical).to have_key('date')
           expect(historical).to have_key('source')
           expect(historical).to have_key('quotes')
           Quote::CURRENCIES.each do |currency|
@@ -46,13 +52,13 @@ RSpec.describe RateApi do
       end
 
       context 'date value is a future date' do
-        subject { described_class.new.historical(Date.tomorrow) }
+        subject { described_class.new.historical([Date.tomorrow]) }
         it 'returns false' do
           expect(subject).to be_falsey
         end
 
         it "returns 'date should be past or current' errors message" do
-          instance.historical(Date.tomorrow)
+          instance.historical([Date.tomorrow])
           expect(instance.error_message).to eq('date should be past or current')
         end
       end
@@ -63,7 +69,7 @@ RSpec.describe RateApi do
       allow(instance).to receive(:success_api_request?).and_return(false)
       allow(instance).to receive(:api_response_error_code).and_return(104)
 
-      instance.historical(Date.today)
+      instance.historical([Date.today])
       message = 'sorry we have limited resource'
       expect(instance.error_message).to eq(message)
     end

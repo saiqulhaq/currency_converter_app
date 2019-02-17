@@ -3,9 +3,8 @@
 module Api
   class RatesController < ::ApplicationController
     def historical
-      rates = Rate.where('historical_date between ? and ?',
-                         params.require(:start_date).to_date,
-                         params.require(:end_date).to_date)
+      dates = (params.require(:start_date).to_date..params.require(:end_date).to_date).to_a
+      rates = Rate.where('historical_date between ? and ?', dates.first, dates.last)
       return unless stale? rates.cache_key, template: false
 
       rates = rates.order(:historical_date)

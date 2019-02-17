@@ -2,5 +2,5 @@
 
 class LiveRateSerializer < Blueprinter::Base
   identifier :live_timestamp, name: :timestamp
-  association :fetch_quotes, blueprint: QuoteSerializer, name: :quote
+  association :fetch_quotes, blueprint: QuoteSerializer, name: :quotes
 end

@@ -27,11 +27,13 @@
       </div>
     </div>
     <LiveChart v-if="isLiveMode"/>
-    <HistoricalChart v-else />
+    <HistoricalChart v-else :startDate="form.startDate" :endDate="form.endDate" />
   </div>
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   components: {
     LiveChart: () => import("./components/LiveChart.vue"),
@@ -39,11 +41,12 @@ export default {
     Datepicker: () => import("vuejs-datepicker")
   },
   data() {
+    const today = moment()
     return {
       mode: "live",
       form: {
-        startDate: new Date(),
-        endDate: new Date()
+        endDate: today.toDate(),
+        startDate: today.subtract(1, 'week').toDate()
       }
     };
   },

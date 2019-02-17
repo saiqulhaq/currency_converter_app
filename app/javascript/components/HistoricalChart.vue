@@ -41,25 +41,6 @@ export default {
     return {
       dataCollection: null,
       options: {
-        scales: {
-          xAxes: [
-            {
-              // type: "time",
-              // distribution: "series",
-              // ticks: {
-              //   source: "labels"
-              // }
-            }
-          ],
-          yAxes: [
-            {
-              scaleLabel: {
-                display: true,
-                labelString: "Closing price ($)"
-              }
-            }
-          ]
-        },
         tooltips: {
           position: "nearest",
           mode: "index",

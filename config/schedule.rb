@@ -22,5 +22,5 @@
 # Learn more: http://github.com/javan/whenever
 
 every '9,19,29,39,49,59 * * * *' do
-  runner 'LiveRateJob.perform_async'
+  runner 'LiveRateJob.perform_later'
 end

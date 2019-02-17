@@ -1,12 +1,13 @@
 <template>
   <div class="small">
-    <line-chart :chart-data="datacollection" :options="options"></line-chart>
+    <line-chart :chart-data="dataCollection" :options="options"/>
   </div>
 </template>
 
 <script>
 import moment from "moment";
-import { forEach, keys, sample } from "lodash-es";
+import { forEach, keys, sample, map } from "lodash-es";
+import promisePoller from "promise-poller";
 import LineChart from "./LineChart.js";
 
 const Color = require("color");
@@ -21,13 +22,15 @@ const chartColors = {
   grey: "rgb(201, 203, 207)"
 };
 
+let poller;
+
 export default {
   components: {
     LineChart
   },
   data() {
     return {
-      datacollection: null,
+      dataCollection: null,
       options: {
         scales: {
           xAxes: [
@@ -38,14 +41,6 @@ export default {
                 source: "labels"
               }
             }
-          ],
-          yAxes: [
-            {
-              scaleLabel: {
-                display: true,
-                labelString: "Closing price ($)"
-              }
-            }
           ]
         },
         tooltips: {
@@ -54,7 +49,6 @@ export default {
           intersect: false
         }
       },
-      labels: [],
       quotes: {
         USD: [],
         BRL: [],
@@ -64,25 +58,38 @@ export default {
     };
   },
   mounted() {
-    this.fetchLiveData(this.fillData);
+    this.fetchLiveData()
+      .then(rates => this.fillData(rates))
+      .catch(error => console.error(error));
+    poller = setInterval(() => {
+      promisePoller({
+        taskFn: () => this.fetchLiveData(),
+        interval: 1000,
+        retries: 5,
+        timeout: 40000,
+        strategy: 'exponential-backoff',
+        min: 1000,
+        max: 40000
+      })
+        .then(rates => this.fillData(rates))
+        .catch(error => console.error(error));
+    }, 600000);
+  },
+  destroyed() {
+    clearInterval(poller);
   },
   methods: {
     fillData(rates) {
-      const labels = [];
-      forEach(rates, rate => {
-        const timestamp = moment(rate.timestamp);
+      const labels = map(rates, rate => {
         forEach(rate.quotes, quote => {
           this.$data.quotes[quote.iso].push(quote.rate);
         });
-        labels.push(timestamp);
+        return moment(rate.timestamp);
       });
-      this.$set(this.$data, "labels", labels);
 
-      const datasets = [];
-
-      forEach(keys(this.$data.quotes), rateCode => {
+      const datasets = map(keys(this.$data.quotes), rateCode => {
         const color = chartColors[sample(keys(chartColors))];
-        const item = {
+        return {
           label: rateCode,
           backgroundColor: Color(color)
             .alpha(0.5)
@@ -95,19 +102,18 @@ export default {
           lineTension: 0,
           borderWidth: 2
         };
-        datasets.push(item);
       });
 
-      this.datacollection = {
+      this.$set(this.$data, "dataCollection", {
         labels: labels,
         datasets: datasets
-      };
+      });
     },
-    fetchLiveData(callback) {
-      this.$http
+    fetchLiveData() {
+      return this.$http
         .get("/api/rates/live.json")
-        .then(response => callback(response.body))
-        .catch(error => console.error(error));
+        .then(response => Promise.resolve(response.body))
+        .catch(error => Promise.reject(error));
     }
   }
 };

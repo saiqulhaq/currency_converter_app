@@ -14,20 +14,37 @@
             History
           </label>
         </div>
+        <div class="flex items-center" v-if="isHistoricalMode">
+          <div>
+            <label for="startDate">Start date</label>
+            <Datepicker v-model="form.startDate"/>
+          </div>
+          <div class="ml2">
+            <label for="endDate">End date</label>
+            <Datepicker v-model="form.endDate"/>
+          </div>
+        </div>
       </div>
     </div>
     <LiveChart v-if="isLiveMode"/>
+    <HistoricalChart v-else />
   </div>
 </template>
 
 <script>
 export default {
   components: {
-    LiveChart: () => import("./components/LiveChart.vue")
+    LiveChart: () => import("./components/LiveChart.vue"),
+    HistoricalChart: () => import('./components/HistoricalChart.vue'),
+    Datepicker: () => import("vuejs-datepicker")
   },
   data() {
     return {
-      mode: "live"
+      mode: "live",
+      form: {
+        startDate: new Date(),
+        endDate: new Date()
+      }
     };
   },
   computed: {
@@ -35,7 +52,7 @@ export default {
       return this.$data.mode === "live";
     },
     isHistoricalMode() {
-      return this.$data.mode === 'historical'
+      return this.$data.mode === "historical";
     }
   }
 };

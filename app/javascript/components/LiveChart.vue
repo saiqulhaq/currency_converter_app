@@ -103,17 +103,6 @@ export default {
         datasets: datasets
       };
     },
-    randomNumber(min, max) {
-      return Math.random() * (max - min) + min;
-    },
-    randomBar(date, lastClose) {
-      var open = this.randomNumber(lastClose * -1, lastClose * 1);
-      var close = this.randomNumber(open - 1, open + 1);
-      return {
-        t: date.valueOf(),
-        y: close
-      };
-    },
     fetchLiveData(callback) {
       this.$http
         .get("/api/rates/live.json")

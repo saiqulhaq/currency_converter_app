@@ -6,7 +6,7 @@
 
 <script>
 import moment from "moment";
-import { forEach, keys, sample } from "lodash-es";
+import { forEach, map, keys, sample } from "lodash-es";
 import LineChart from "./LineChart.js";
 import humps from "humps";
 
@@ -44,11 +44,11 @@ export default {
         scales: {
           xAxes: [
             {
-              type: "time",
-              distribution: "series",
-              ticks: {
-                source: "labels"
-              }
+              // type: "time",
+              // distribution: "series",
+              // ticks: {
+              //   source: "labels"
+              // }
             }
           ],
           yAxes: [
@@ -66,7 +66,6 @@ export default {
           intersect: false
         }
       },
-      labels: [],
       quotes: {
         USD: [],
         BRL: [],
@@ -91,21 +90,16 @@ export default {
       this.fetchHistoricalData(this.fillData);
     },
     fillData(rates) {
-      const labels = [];
-      forEach(rates, rate => {
-        const date = moment(rate.date);
+      const labels = map(rates, rate => {
         forEach(rate.quotes, quote => {
           this.$data.quotes[quote.iso].push(quote.rate);
         });
-        labels.push(date);
+        return moment(rate.date).format('DD MMM').toString()
       });
-      this.$set(this.$data, "labels", labels);
 
-      const datasets = [];
-
-      forEach(keys(this.$data.quotes), rateCode => {
+      const datasets = map(keys(this.$data.quotes), rateCode => {
         const color = chartColors[sample(keys(chartColors))];
-        const item = {
+        return {
           label: rateCode,
           backgroundColor: Color(color)
             .alpha(0.5)
@@ -118,7 +112,6 @@ export default {
           lineTension: 0,
           borderWidth: 2
         };
-        datasets.push(item);
       });
 
       this.dataCollection = {

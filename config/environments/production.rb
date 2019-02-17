@@ -62,6 +62,8 @@ Rails.application.configure do
   # Use a different cache store in production.
   config.cache_store = :mem_cache_store, { namespace: 'prod_', pool_size: 5 }
 
+  config.identity_cache_store = :mem_cache_store, { namespace: 'prod_ic:', pool_size: 5 }
+
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "graph_app_#{Rails.env}"

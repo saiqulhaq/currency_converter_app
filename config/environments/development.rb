@@ -22,6 +22,9 @@ Rails.application.configure do
     config.action_controller.perform_caching = true
 
     config.cache_store = :mem_cache_store, { namespace: 'dev_', pool_size: 5 }
+
+    config.identity_cache_store = :mem_cache_store, { namespace: 'dev_ic:', pool_size: 5 }
+
     config.public_file_server.headers = {
       'Cache-Control' => "public, max-age=#{2.days.to_i}"
     }

@@ -23,14 +23,7 @@ class RateApi
   # @param dates [Array] array of date
   # @return array of Rate and its quotes
   def historical(dates, source = DEFAULT_SOURCE)
-    dates.tap do |d|
-      d.each do |date|
-        if date.future?
-          errors.add(:base, 'date should be past or current')
-          return false
-        end
-      end
-    end
+    dates.reject!(&:future?)
 
     return [] if dates.blank?
 

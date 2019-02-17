@@ -10,11 +10,14 @@
 #
 
 class Rate < ApplicationRecord
+  include IdentityCache
+
   validates :historical_date, presence: true, if: -> { live_timestamp.nil? }
   validates :live_timestamp, presence: true, if: -> { historical_date.nil? }
   validate :prevent_type_conflict
 
   has_many :quotes, dependent: :delete_all, inverse_of: :rate
+  cache_has_many :quotes
 
   def historical?
     historical_date.present?

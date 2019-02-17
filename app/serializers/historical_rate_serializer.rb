@@ -2,5 +2,5 @@
 
 class HistoricalRateSerializer < Blueprinter::Base
   identifier :historical_date, name: :date
-  association :quotes, blueprint: QuoteSerializer
+  association :fetch_quotes, blueprint: QuoteSerializer, name: :quotes
 end

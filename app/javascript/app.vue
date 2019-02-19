@@ -18,15 +18,11 @@
 
     <div class="mw8 center pb3 ph3">
       <div class="flex">
-        <div class="flex items-center" v-if="isHistoricalMode">
-          <div>
-            <label for="startDate">Start date</label>
-            <Datepicker v-model="form.startDate"/>
-          </div>
-          <div class="ml2">
-            <label for="endDate">End date</label>
-            <Datepicker v-model="form.endDate"/>
-          </div>
+        <div class="flex items-center mt4 ph1" v-if="isHistoricalMode">
+          <div class="mr2">Start date</div>
+          <Datepicker v-model="form.startDate"/>
+          <div class="ml4 mr2">End date</div>
+          <Datepicker v-model="form.endDate"/>
         </div>
       </div>
       <LiveChart v-if="isLiveMode"/>

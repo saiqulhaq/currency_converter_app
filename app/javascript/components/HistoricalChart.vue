@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container mt3">
     <line-chart :chart-data="dataCollection" :options="options"></line-chart>
   </div>
 </template>

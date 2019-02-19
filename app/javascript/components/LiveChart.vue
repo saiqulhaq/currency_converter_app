@@ -2,6 +2,25 @@
   <div class="container">
     <h1 class="ph3">Live rate for {{ now }}</h1>
     <line-chart :chart-data="dataCollection" :options="options"/>
+
+    <div class="mt3">
+      <div class="ba b--black-50 pa3">
+        <h4 class="mt0 mb2">Convert</h4>
+        <div class="flex flex-column">
+          <div v-for="currency in keys(convert)" :key="currency" class="mv2 flex">
+            <div class="w3">{{ currency }}</div>
+            <div>
+              <input
+                type="number"
+                @input="(event) => convertCurrency(event.target.value, currency)"
+                v-model="convert[currency]"
+                class="input-reset bb bt-0 bl-0 br-0"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -49,6 +68,12 @@ export default {
         BRL: [],
         EUR: [],
         AUD: []
+      },
+      convert: {
+        USD: 0,
+        BRL: 0,
+        EUR: 0,
+        AUD: 0
       }
     };
   },
@@ -77,7 +102,28 @@ export default {
     clearInterval(poller);
     clearInterval(clock);
   },
+  computed: {
+    currencyRates() {
+      const rates = {};
+      forEach(keys(this.$data.quotes), quote => {
+        rates[quote] = this.$data.quotes[quote][1];
+      });
+      return rates;
+    }
+  },
   methods: {
+    keys,
+    convertCurrency(value, currencyParam) {
+      const { currencyRates } = this;
+      forEach(keys(this.$data.convert), currency => {
+        if (currency != currencyParam) {
+          let number =
+            value * (currencyRates[currency] / currencyRates[currencyParam]);
+          number = Math.round(number * 10000) / 10000;
+          this.$set(this.$data.convert, currency, number);
+        }
+      });
+    },
     fillData(rates) {
       const labels = map(rates, rate => {
         forEach(rate.quotes, quote => {

@@ -11,7 +11,8 @@ module Api
     end
 
     def live
-      rates = Rate.where('DATE(live_timestamp) = ?', Date.today)
+      timestamp = Time.zone.now - params.require(:utc_offset).to_i.minutes - 24.hours
+      rates = Rate.where('live_timestamp >= ?', timestamp)
       return unless stale? rates.cache_key, template: false
 
       rates = rates.order(:live_timestamp)

@@ -53,13 +53,9 @@ RSpec.describe RateApi do
 
       context 'date value is a future date' do
         subject { described_class.new.historical([Date.tomorrow]) }
-        it 'returns false' do
-          expect(subject).to be_falsey
-        end
-
-        it "returns 'date should be past or current' errors message" do
+        it 'is okay' do
           instance.historical([Date.tomorrow])
-          expect(instance.error_message).to eq('date should be past or current')
+          expect(instance.error_message).to be_blank
         end
       end
     end

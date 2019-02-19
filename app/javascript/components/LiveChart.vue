@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Live rate for {{ now }}</h1>
+    <h1 class="ph3">Live rate for {{ now }}</h1>
     <line-chart :chart-data="dataCollection" :options="options"/>
   </div>
 </template>
@@ -81,7 +81,7 @@ export default {
     }, 600000);
     clock = setInterval(() => {
       this.$set(this.$data, "now", moment().calendar());
-    }, 60000);
+    }, 1000);
   },
   destroyed() {
     clearInterval(poller);
@@ -135,6 +135,6 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  max-width: 600px;
+  max-width: 800px;
 }
 </style>

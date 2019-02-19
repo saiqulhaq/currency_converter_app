@@ -16,18 +16,16 @@
       </div>
     </Navbar>
 
-    <div class="mw8 center">
-      <div class="ma4">
-        <div class="flex">
-          <div class="flex items-center" v-if="isHistoricalMode">
-            <div>
-              <label for="startDate">Start date</label>
-              <Datepicker v-model="form.startDate"/>
-            </div>
-            <div class="ml2">
-              <label for="endDate">End date</label>
-              <Datepicker v-model="form.endDate"/>
-            </div>
+    <div class="mw8 center pb3 ph3">
+      <div class="flex">
+        <div class="flex items-center" v-if="isHistoricalMode">
+          <div>
+            <label for="startDate">Start date</label>
+            <Datepicker v-model="form.startDate"/>
+          </div>
+          <div class="ml2">
+            <label for="endDate">End date</label>
+            <Datepicker v-model="form.endDate"/>
           </div>
         </div>
       </div>

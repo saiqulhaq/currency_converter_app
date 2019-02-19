@@ -11,19 +11,9 @@ import { forEach, keys, sample, map } from "lodash-es";
 import promisePoller from "promise-poller";
 import LineChart from "./LineChart.js";
 import humps from "humps";
+import currencyColor from "./currencyColor.js";
 
 const queryString = require("query-string");
-const Color = require("color");
-
-const chartColors = {
-  red: "rgb(255, 99, 132)",
-  orange: "rgb(255, 159, 64)",
-  yellow: "rgb(255, 205, 86)",
-  green: "rgb(75, 192, 192)",
-  blue: "rgb(54, 162, 235)",
-  purple: "rgb(153, 102, 255)",
-  grey: "rgb(201, 203, 207)"
-};
 
 let poller;
 let clock;
@@ -96,15 +86,13 @@ export default {
         return moment(rate.timestamp);
       });
 
-      const datasets = map(keys(this.$data.quotes), rateCode => {
-        const color = chartColors[sample(keys(chartColors))];
+      const datasets = map(keys(this.$data.quotes), currencyCode => {
+        const { backgroundColor, borderColor } = currencyColor(currencyCode);
         return {
-          label: rateCode,
-          backgroundColor: Color(color)
-            .alpha(0.5)
-            .rgbString(),
-          borderColor: color,
-          data: this.$data.quotes[rateCode],
+          label: currencyCode,
+          backgroundColor,
+          borderColor,
+          data: this.$data.quotes[currencyCode],
           type: "line",
           pointRadius: 0,
           fill: false,

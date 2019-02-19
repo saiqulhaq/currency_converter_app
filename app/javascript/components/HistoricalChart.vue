@@ -1,12 +1,12 @@
 <template>
-  <div class="small">
+  <div class="container">
     <line-chart :chart-data="dataCollection" :options="options"></line-chart>
   </div>
 </template>
 
 <script>
 import moment from "moment";
-import { forEach, map, keys, sample } from "lodash-es";
+import { forEach, map, keys, sample, sortBy } from "lodash-es";
 import LineChart from "./LineChart.js";
 import humps from "humps";
 
@@ -75,7 +75,9 @@ export default {
         forEach(rate.quotes, quote => {
           this.$data.quotes[quote.iso].push(quote.rate);
         });
-        return moment(rate.date).format('DD MMM').toString()
+        return moment(rate.date)
+          .format("DD MMM")
+          .toString();
       });
 
       const datasets = map(keys(this.$data.quotes), rateCode => {
@@ -110,15 +112,15 @@ export default {
       );
       this.$http
         .get(`/api/rates/historical.json?${query}`)
-        .then(response => callback(response.body))
+        .then(response => callback(sortBy(response.body, "date")))
         .catch(error => console.error(error));
     }
   }
 };
 </script>
 
-<style>
-.small {
+<style lang="scss" scoped>
+.container {
   max-width: 600px;
 }
 </style>

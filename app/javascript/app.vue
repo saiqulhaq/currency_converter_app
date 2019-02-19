@@ -1,52 +1,61 @@
 <template>
   <div>
-    <div class="ml4">
-      <div class="flex">
-        <h5>Mode</h5>
-        <div class="flex items-center ml3">
-          <label for="liveMode" class="w3">
-            <input type="radio" value="live" id="liveMode" v-model="mode">
+    <Navbar>
+      <div slot="links">
+        <div class="flex items-center ml5 white">
+          <label for="liveMode" :class="[isLiveMode ? 'b' : '']">
+            <input type="radio" value="live" class="dn" id="liveMode" v-model="mode">
             Live
           </label>
-
-          <label for="historicalMode" class="w4">
-            <input type="radio" id="historicalMode" value="historical" v-model="mode">
+          
+          <label for="historicalMode" class="ml4" :class="[isHistoricalMode ? 'b' : '']">
+            <input type="radio" id="historicalMode" class="dn" value="historical" v-model="mode">
             History
           </label>
         </div>
-        <div class="flex items-center" v-if="isHistoricalMode">
-          <div>
-            <label for="startDate">Start date</label>
-            <Datepicker v-model="form.startDate"/>
-          </div>
-          <div class="ml2">
-            <label for="endDate">End date</label>
-            <Datepicker v-model="form.endDate"/>
+      </div>
+    </Navbar>
+
+    <div class="mw8 center">
+      <div class="ma4">
+        <div class="flex">
+          <div class="flex items-center" v-if="isHistoricalMode">
+            <div>
+              <label for="startDate">Start date</label>
+              <Datepicker v-model="form.startDate"/>
+            </div>
+            <div class="ml2">
+              <label for="endDate">End date</label>
+              <Datepicker v-model="form.endDate"/>
+            </div>
           </div>
         </div>
       </div>
+      <LiveChart v-if="isLiveMode"/>
+      <HistoricalChart v-else :startDate="form.startDate" :endDate="form.endDate"/>
     </div>
-    <LiveChart v-if="isLiveMode"/>
-    <HistoricalChart v-else :startDate="form.startDate" :endDate="form.endDate" />
   </div>
 </template>
 
 <script>
-import moment from 'moment';
+import moment from "moment";
+
+import Navbar from "./components/Navbar.vue";
 
 export default {
   components: {
     LiveChart: () => import("./components/LiveChart.vue"),
-    HistoricalChart: () => import('./components/HistoricalChart.vue'),
-    Datepicker: () => import("vuejs-datepicker")
+    HistoricalChart: () => import("./components/HistoricalChart.vue"),
+    Datepicker: () => import("vuejs-datepicker"),
+    Navbar
   },
   data() {
-    const today = moment()
+    const today = moment();
     return {
       mode: "live",
       form: {
         endDate: today.toDate(),
-        startDate: today.subtract(1, 'week').toDate()
+        startDate: today.subtract(1, "week").toDate()
       }
     };
   },

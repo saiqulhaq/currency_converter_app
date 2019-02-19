@@ -1,5 +1,6 @@
 <template>
-  <div class="small">
+  <div class="container">
+    <h1>Live rate for {{ now }}</h1>
     <line-chart :chart-data="dataCollection" :options="options"/>
   </div>
 </template>
@@ -9,7 +10,9 @@ import moment from "moment";
 import { forEach, keys, sample, map } from "lodash-es";
 import promisePoller from "promise-poller";
 import LineChart from "./LineChart.js";
+import humps from "humps";
 
+const queryString = require("query-string");
 const Color = require("color");
 
 const chartColors = {
@@ -23,6 +26,7 @@ const chartColors = {
 };
 
 let poller;
+let clock;
 
 export default {
   components: {
@@ -30,6 +34,7 @@ export default {
   },
   data() {
     return {
+      now: moment().calendar(),
       dataCollection: null,
       options: {
         scales: {
@@ -67,16 +72,20 @@ export default {
         interval: 1000,
         retries: 5,
         timeout: 40000,
-        strategy: 'exponential-backoff',
+        strategy: "exponential-backoff",
         min: 1000,
         max: 40000
       })
         .then(rates => this.fillData(rates))
         .catch(error => console.error(error));
     }, 600000);
+    clock = setInterval(() => {
+      this.$set(this.$data, "now", moment().calendar());
+    }, 60000);
   },
   destroyed() {
     clearInterval(poller);
+    clearInterval(clock);
   },
   methods: {
     fillData(rates) {
@@ -110,8 +119,13 @@ export default {
       });
     },
     fetchLiveData() {
+      const params = queryString.stringify(
+        humps.decamelizeKeys({
+          utcOffset: moment().utcOffset()
+        })
+      );
       return this.$http
-        .get("/api/rates/live.json")
+        .get(`/api/rates/live.json?${params}`)
         .then(response => Promise.resolve(response.body))
         .catch(error => Promise.reject(error));
     }
@@ -119,8 +133,8 @@ export default {
 };
 </script>
 
-<style>
-.small {
+<style lang="scss" scoped>
+.container {
   max-width: 600px;
 }
 </style>

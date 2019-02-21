@@ -52,9 +52,12 @@ export default {
             {
               type: "time",
               distribution: "series",
+              time: {
+                unit: 'hour'
+              },
               ticks: {
                 source: "labels",
-                callback: function(value, index, values) {
+                callback: function(value) {
                   if (value === lastHour) {
                     return "";
                   }

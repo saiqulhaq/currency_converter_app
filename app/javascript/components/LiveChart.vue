@@ -26,7 +26,7 @@
 
 <script>
 import moment from "moment";
-import { forEach, keys, sample, map } from "lodash-es";
+import { forEach, keys, sample, map, isNil } from "lodash-es";
 import promisePoller from "promise-poller";
 import LineChart from "./LineChart.js";
 import humps from "humps";
@@ -36,6 +36,7 @@ const queryString = require("query-string");
 
 let poller;
 let clock;
+let lastHour = "";
 
 export default {
   components: {
@@ -52,7 +53,17 @@ export default {
               type: "time",
               distribution: "series",
               ticks: {
-                source: "labels"
+                source: "labels",
+                callback: function(value, index, values) {
+                  if (value === lastHour) {
+                    return "";
+                  }
+                  if (value !== lastHour) {
+                    lastHour = value;
+                  }
+
+                  return lastHour;
+                }
               }
             }
           ]

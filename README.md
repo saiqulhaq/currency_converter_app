@@ -1,24 +1,41 @@
-# README
+# Currency Converter Rails Vue
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Currency Converter app built with Rails and VueJS framework. Uses currency layer for source data. 
+Data is cached with Memcached.
 
-Things you may want to cover:
+Demo: [http://workable.saiqulhaq.com/](http://workable.saiqulhaq.com/)
 
-* Ruby version
+## Installation
 
-* System dependencies
+Tested with:
+
+* Ruby 2.4.5
+* PostgreSQL 10.6
+* Memcached 1.5.6
+* NodeJS v10.13.0
+* Yarn 1.12.3
 
 * Configuration
 
+* edit `config/database.yml` file
+* add currency layer api key `rails credentials:edit`, add new key `currency_layer_api_key`
+
 * Database creation
 
-* Database initialization
+`rails db:create db:migrate`
 
-* How to run the test suite
+## Usage
 
-* Services (job queues, cache servers, search engines, etc.)
+1. run `sidekiq`
+2. exec rails server
+3. exec webpack dev server (optional) 
 
-* Deployment instructions
+## Screenshot
 
-* ...
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)

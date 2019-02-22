@@ -1,24 +1,24 @@
 {
-  "name": "graph_app",
-  "private": true,
   "dependencies": {
-    "@rails/webpacker": "3.5",
+    "@rails/webpacker": "^4.0.0-rc.7",
     "chart.js": "^2.7.3",
+    "color": "^3.1.0",
     "humps": "^2.0.1",
     "lodash-es": "^4.17.11",
     "moment": "^2.24.0",
     "nprogress": "^0.2.0",
+    "postcss-cssnext": "^3.1.0",
     "promise-poller": "^1.7.0",
     "query-string": "^6.2.0",
     "tachyons": "^4.11.1",
-    "vue": "^2.6.2",
+    "vue": "^2.6.7",
     "vue-chartjs": "^3.4.0",
-    "vue-loader": "14.2.2",
+    "vue-loader": "^15.6.4",
     "vue-resource": "^1.5.1",
-    "vue-template-compiler": "^2.6.2",
+    "vue-template-compiler": "^2.6.7",
     "vuejs-datepicker": "^1.5.4"
   },
   "devDependencies": {
-    "webpack-dev-server": "2.11.2"
+    "webpack-dev-server": "^3.2.0"
   }
 }

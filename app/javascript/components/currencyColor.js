@@ -7,7 +7,7 @@ const AUD = "rgb(54, 162, 235)";
 
 const legend = (rgb) => Color(rgb)
 .alpha(0.5)
-.rgbString() 
+.rgb() 
 const colors = {
   USD: {
     backgroundColor: legend(USD),

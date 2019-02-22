@@ -71,4 +71,5 @@ gem 'money-rails', '~>1.12'
 gem 'oj'
 gem 'pry-rails'
 gem 'sidekiq'
+gem 'simplecov', require: false, group: :test
 gem 'whenever', require: false

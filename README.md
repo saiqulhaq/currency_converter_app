@@ -30,8 +30,6 @@ Tested with:
 2. exec rails server
 3. exec webpack dev server (optional) 
 
-## Screenshot
-
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 

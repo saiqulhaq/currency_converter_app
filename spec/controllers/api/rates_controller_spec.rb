@@ -36,10 +36,28 @@ RSpec.describe Api::RatesController, type: :controller do
     end
   end
 
-  xdescribe 'GET historical' do
-    it do
-      get :historical
-      expect(response).to be_falsey
+  describe 'GET historical' do
+    it 'requires `start_date` and `end_date` param' do
+      expect do
+        get :historical
+      end.to raise_error(ActionController::ParameterMissing)
+
+      expect do
+        get :historical, params: { start_date: Date.today }
+      end.to raise_error(ActionController::ParameterMissing)
+
+      expect do
+        get :historical, params: { end_date: Date.today }
+      end.to raise_error(ActionController::ParameterMissing)
+    end
+
+    let(:start_date) { Date.parse('2019-02-10') }
+    let(:end_date) { Date.parse('2019-02-12') }
+    it 'returns 200 http response if start date is less than end date' do
+      VCR.use_cassette("#{described_class}:historical:#{start_date}:#{end_date}") do
+        get :historical, params: { start_date: start_date, end_date: end_date }
+        expect(response).to be_successful
+      end
     end
   end
 end

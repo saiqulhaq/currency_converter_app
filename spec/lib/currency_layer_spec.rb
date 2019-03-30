@@ -1,23 +1,10 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_dependency 'rate_api'
+require_dependency 'currency_layer'
 
-RSpec.describe RateApi do
+RSpec.describe CurrencyLayer do
   let(:instance) { described_class.new }
-
-  describe '#live' do
-    it 'returns `source` and `quotes` data' do
-      VCR.use_cassette("#{described_class}_live") do
-        live = subject.live
-        expect(live).to have_key('source')
-        expect(live).to have_key('quotes')
-        Quote::CURRENCIES.each do |currency|
-          expect(live['quotes']).to have_key(currency)
-        end
-      end
-    end
-  end
 
   describe '#historical' do
     let(:dates_param) do

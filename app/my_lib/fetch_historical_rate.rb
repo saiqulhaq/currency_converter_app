@@ -2,24 +2,37 @@
 
 # Fetch from cache, find from db or request rate data from currencylayer
 class FetchHistoricalRate
-  attr_accessor :dates
-
   def perform(dates)
-    self.dates = dates
-    data = Rails.cache.read_multi(*cache_keys)
-    return data.values if data.keys.length == cache_keys.length
+    existing_data = find_existing_caches(dates)
+    return existing_data.values unless stale?
 
-    fetch_or_find(data)
+    data = create_or_find_data(existing_data)
+
+    return [] if errors.present?
+
     data.values
+  end
+
+  def errors
+    @errors ||= ActiveSupport::Error.new(self)
   end
 
   private
 
-  def cache_keys
-    dates.map { |date| "#{self.class}:historical:#{date}" }
+  attr_accessor :cache_keys
+
+  def stale?
+    @stale == true
   end
 
-  def fetch_or_find(data)
+  def find_existing_caches(dates)
+    self.cache_keys = dates.map { |date| "#{self.class}:historical:#{date}" }
+    data = Rails.cache.read_multi(*cache_keys)
+    @stale = data.keys.length == cache_keys.length
+    data
+  end
+
+  def create_or_find_data(data)
     missed_date = (cache_keys - data.keys).map do |ck|
       ck.split(':').last
     end
@@ -39,7 +52,7 @@ class FetchHistoricalRate
   end
 
   def request_new_data(data, missed_date)
-    api = RateApi.new
+    api = CurrencyLayer.new
     api.historical(missed_date.map(&:to_date)).each do |api_data|
       next if api_data == false
 

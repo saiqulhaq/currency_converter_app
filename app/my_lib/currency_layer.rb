@@ -1,23 +1,10 @@
 # frozen_string_literal: true
 
-# Responsible to fetch data from currencylayer.com
-class RateApi
-  API_KEY = Rails.application.credentials.currency_layer_api_key
+class CurrencyLayer
   DEFAULT_SOURCE = MoneyRails.default_currency.iso_code
 
   def initialize
     @api_response = {}
-  end
-
-  def live(source = DEFAULT_SOURCE)
-    api_path = "live?#{live_params(source).to_param}"
-    self.api_response = exec_api_request(api_path)&.body
-
-    return quotes if success_api_request?
-
-    errors.add(:base, custom_error_message(api_response_error_code))
-
-    false
   end
 
   # @param dates [Array] array of date
@@ -69,16 +56,8 @@ class RateApi
 
   def historical_params(date, source)
     {
-      access_key: API_KEY,
+      access_key: Rails.application.credentials.currency_layer_api_key,
       date: date,
-      source: source,
-      currencies: Quote::CURRENCIES.join(',')
-    }
-  end
-
-  def live_params(source)
-    {
-      access_key: API_KEY,
       source: source,
       currencies: Quote::CURRENCIES.join(',')
     }

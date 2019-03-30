@@ -79,13 +79,13 @@ export default {
       },
       quotes: {
         USD: [],
-        BRL: [],
+        SGD: [],
         EUR: [],
         AUD: []
       },
       convert: {
         USD: 0,
-        BRL: 0,
+        SGD: 0,
         EUR: 0,
         AUD: 0
       }

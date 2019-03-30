@@ -1,7 +1,7 @@
 const Color = require("color");
 
 const USD = "rgb(255, 99, 132)";
-const BRL = "rgb(255, 159, 64)"
+const SGD = "rgb(255, 159, 64)"
 const EUR = "rgb(0, 0, 0)";
 const AUD = "rgb(54, 162, 235)";
 
@@ -13,9 +13,9 @@ const colors = {
     backgroundColor: legend(USD),
     borderColor: USD
   },
-  BRL: {
-    backgroundColor: legend(BRL),
-    borderColor: BRL
+  SGD: {
+    backgroundColor: legend(SGD),
+    borderColor: SGD
   },
   EUR: {
     backgroundColor: legend(EUR),

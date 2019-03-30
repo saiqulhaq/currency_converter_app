@@ -14,7 +14,7 @@
 class Quote < ApplicationRecord
   include IdentityCache
   # supported currencies
-  CURRENCIES = %w[USD BRL EUR AUD].freeze
+  CURRENCIES = %w[USD SGD EUR AUD].freeze
 
   belongs_to :rate, inverse_of: :quotes
   cache_belongs_to :rate

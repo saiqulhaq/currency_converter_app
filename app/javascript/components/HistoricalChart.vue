@@ -39,7 +39,7 @@ export default {
       },
       quotes: {
         USD: [],
-        BRL: [],
+        SGD: [],
         EUR: [],
         AUD: []
       }

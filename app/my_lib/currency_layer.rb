@@ -2,6 +2,7 @@
 
 class CurrencyLayer
   DEFAULT_SOURCE = MoneyRails.default_currency.iso_code
+  API_KEY = Rails.application.credentials.currency_layer_api_key
 
   def initialize
     @api_response = {}
@@ -56,7 +57,7 @@ class CurrencyLayer
 
   def historical_params(date, source)
     {
-      access_key: Rails.application.credentials.currency_layer_api_key,
+      access_key: API_KEY,
       date: date,
       source: source,
       currencies: Quote::CURRENCIES.join(',')
